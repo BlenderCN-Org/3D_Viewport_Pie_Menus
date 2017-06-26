@@ -22,8 +22,8 @@
 
 bl_info = {
     "name": "Hotkey: 'Alt + Spacebar'",
-    #    "author": "Italic_",
-    #    "version": (1, 1, 0),
+    "author": "Italic_",
+    "version": (1, 1, 0),
     "blender": (2, 77, 0),
     "description": "Set Transform Orientations",
     "location": "3D View",
@@ -38,12 +38,13 @@ from bpy.props import (
         StringProperty,
         )
 
+
 class OrientPoll(Operator):
     bl_idname = "pie.orientation"
     bl_label = "Orientation Poll"
     bl_options = {'INTERNAL'}
 
-    space = bpy.props.StringProperty()
+    space = StringProperty()
 
     @classmethod
     def poll(cls, context):
@@ -95,7 +96,6 @@ def register():
         km = wm.keyconfigs.addon.keymaps.new(name='3D View Generic', space_type='VIEW_3D')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'SPACE', 'PRESS', alt=True)
         kmi.properties.name = "pie.orient"
-#        kmi.active = True
         addon_keymaps.append((km, kmi))
 
 
@@ -105,8 +105,8 @@ def unregister():
 
     wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
-    if kc:
-        km = kc.keymaps['3D View Generic']
+    km = kc.keymaps.get('3D View Generic') if kc else None
+    if km:
         for kmi in km.keymap_items:
             if kmi.idname == 'wm.call_menu_pie':
                 if kmi.properties.name == "pie.orient":

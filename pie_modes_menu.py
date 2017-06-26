@@ -21,8 +21,8 @@
 bl_info = {
     "name": "Hotkey: 'Tab'",
     "description": "Switch between 3d view object/edit modes",
-    # "author": "pitiwazou, meta-androcto, italic",
-    # "version": (0, 1, 0),
+    "author": "pitiwazou, meta-androcto, italic",
+    "version": (0, 1, 1),
     "blender": (2, 77, 0),
     "location": "3D View",
     "warning": "",
@@ -460,7 +460,6 @@ def register():
         km = wm.keyconfigs.addon.keymaps.new(name='Object Non-modal')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'TAB', 'PRESS')
         kmi.properties.name = "pie.objecteditmode"
-        # kmi.active = True
         addon_keymaps.append((km, kmi))
 
         km = wm.keyconfigs.addon.keymaps.new(name='Grease Pencil Stroke Edit Mode')
@@ -472,21 +471,23 @@ def register():
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
+
     wm = bpy.context.window_manager
-
     kc = wm.keyconfigs.addon
-    if kc:
-        km = kc.keymaps['Object Non-modal']
-        for kmi in km.keymap_items:
-            if kmi.idname == 'wm.call_menu_pie':
-                if kmi.properties.name == "pie.objecteditmode":
-                    km.keymap_items.remove(kmi)
 
-        km = kc.keymaps['Grease Pencil Stroke Edit Mode']
-        for kmi in km.keymap_items:
+    km_1 = kc.keymaps.get('Object Non-modal') if kc else None
+    if km_1:
+        for kmi in km_1.keymap_items:
             if kmi.idname == 'wm.call_menu_pie':
                 if kmi.properties.name == "pie.objecteditmode":
-                    km.keymap_items.remove(kmi)
+                    km_1.keymap_items.remove(kmi)
+
+    km_2 = kc.keymaps.get('Grease Pencil Stroke Edit Mode') if kc else None
+    if km_2:
+        for kmi in km_2.keymap_items:
+            if kmi.idname == 'wm.call_menu_pie':
+                if kmi.properties.name == "pie.objecteditmode":
+                    km_2.keymap_items.remove(kmi)
 
 
 if __name__ == "__main__":

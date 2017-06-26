@@ -21,8 +21,8 @@
 bl_info = {
     "name": "Hotkey: 'Ctrl Alt S ",
     "description": "Switch Editor Type Menu",
-    #    "author": "saidenka",
-    #    "version": (0, 1, 0),
+    "author": "saidenka",
+    "version": (0, 1, 0),
     "blender": (2, 77, 0),
     "location": "All Editors",
     "warning": "",
@@ -168,18 +168,17 @@ def register():
         km = wm.keyconfigs.addon.keymaps.new(name='Window')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'PRESS', ctrl=True, alt=True)
         kmi.properties.name = "pie.editor"
-#        kmi.active = True
         addon_keymaps.append((km, kmi))
 
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
-    wm = bpy.context.window_manager
 
+    wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
-    if kc:
-        km = kc.keymaps['Window']
+    km = kc.keymaps.get('Window') if kc else None
+    if km:
         for kmi in km.keymap_items:
             if kmi.idname == 'wm.call_menu_pie':
                 if kmi.properties.name == "wm.area_type_pie_operator":

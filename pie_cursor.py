@@ -21,8 +21,8 @@
 bl_info = {
     "name": "Hotkey: 'Shift S'",
     "description": "Cursor Menu",
-    #    "author": "pitiwazou, meta-androcto",
-    #    "version": (0, 1, 0),
+    "author": "pitiwazou, meta-androcto",
+    "version": (0, 1, 0),
     "blender": (2, 77, 0),
     "location": "3D View",
     "warning": "",
@@ -108,11 +108,11 @@ def register():
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
-    wm = bpy.context.window_manager
 
+    wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
-    if kc:
-        km = kc.keymaps['3D View Generic']
+    km = kc.keymaps.get('3D View Generic') if kc else None
+    if km:
         for kmi in km.keymap_items:
             if kmi.idname == 'wm.call_menu_pie':
                 if kmi.properties.name == "snap.cursormenu":

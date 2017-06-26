@@ -21,8 +21,8 @@
 bl_info = {
     "name": "Hotkey: 'Alt Shift O'",
     "description": "Origin Snap/Place Menu",
-    #    "author": "pitiwazou, meta-androcto",
-    #    "version": (0, 1, 0),
+    "author": "pitiwazou, meta-androcto",
+    "version": (0, 1, 1),
     "blender": (2, 77, 0),
     "location": "3D View",
     "warning": "",
@@ -38,8 +38,6 @@ from bpy.types import (
 
 
 # Pivot to selection
-
-
 class PivotToSelection(Operator):
     bl_idname = "object.pivot2selection"
     bl_label = "Pivot To Selection"
@@ -54,9 +52,8 @@ class PivotToSelection(Operator):
         context.scene.cursor_location = saved_location
         return {'FINISHED'}
 
+
 # Pivot to Bottom
-
-
 class PivotBottom(Operator):
     bl_idname = "object.pivotobottom"
     bl_label = "Pivot To Bottom"
@@ -84,9 +81,8 @@ class PivotBottom(Operator):
         bpy.ops.object.mode_set(mode='EDIT')
         return {'FINISHED'}
 
+
 # Pie Origin/Pivot - Shift + S
-
-
 class PieOriginPivot(Menu):
     bl_idname = "origin.pivotmenu"
     bl_label = "Origin Menu"
@@ -100,28 +96,37 @@ class PieOriginPivot(Menu):
             pie.operator("object.origin_set", text="Origin to Center of Mass",
                          icon='BBOX').type = 'ORIGIN_CENTER_OF_MASS'
             # 6 - RIGHT
-            pie.operator("object.origin_set", text="Origin To 3D Cursor", icon='CURSOR').type = 'ORIGIN_CURSOR'
+            pie.operator("object.origin_set", text="Origin To 3D Cursor",
+                        icon='CURSOR').type = 'ORIGIN_CURSOR'
             # 2 - BOTTOM
-            pie.operator("object.pivotobottom", text="Origin to Bottom", icon='TRIA_DOWN')
+            pie.operator("object.pivotobottom", text="Origin to Bottom",
+                        icon='TRIA_DOWN')
             # 8 - TOP
-            pie.operator("object.pivot2selection", text="Origin To Selection", icon='SNAP_INCREMENT')
+            pie.operator("object.pivot2selection", text="Origin To Selection",
+                        icon='SNAP_INCREMENT')
             # 7 - TOP - LEFT
-            pie.operator("object.origin_set", text="Geometry To Origin", icon='BBOX').type = 'GEOMETRY_ORIGIN'
+            pie.operator("object.origin_set", text="Geometry To Origin",
+                        icon='BBOX').type = 'GEOMETRY_ORIGIN'
             # 9 - TOP - RIGHT
-            pie.operator("object.origin_set", text="Origin To Geometry", icon='ROTATE').type = 'ORIGIN_GEOMETRY'
+            pie.operator("object.origin_set", text="Origin To Geometry",
+                        icon='ROTATE').type = 'ORIGIN_GEOMETRY'
 
         else:
             # 4 - LEFT
             pie.operator("object.origin_set", text="Origin to Center of Mass",
                          icon='BBOX').type = 'ORIGIN_CENTER_OF_MASS'
             # 6 - RIGHT
-            pie.operator("object.origin_set", text="Origin To 3D Cursor", icon='CURSOR').type = 'ORIGIN_CURSOR'
+            pie.operator("object.origin_set", text="Origin To 3D Cursor",
+                        icon='CURSOR').type = 'ORIGIN_CURSOR'
             # 2 - BOTTOM
-            pie.operator("object.pivot2selection", text="Origin To Selection", icon='SNAP_INCREMENT')
+            pie.operator("object.pivot2selection", text="Origin To Selection",
+                        icon='SNAP_INCREMENT')
             # 8 - TOP
-            pie.operator("object.origin_set", text="Origin To Geometry", icon='ROTATE').type = 'ORIGIN_GEOMETRY'
+            pie.operator("object.origin_set", text="Origin To Geometry",
+                        icon='ROTATE').type = 'ORIGIN_GEOMETRY'
             # 7 - TOP - LEFT
-            pie.operator("object.origin_set", text="Geometry To Origin", icon='BBOX').type = 'GEOMETRY_ORIGIN'
+            pie.operator("object.origin_set", text="Geometry To Origin",
+                        icon='BBOX').type = 'GEOMETRY_ORIGIN'
 
 
 classes = (
@@ -136,6 +141,7 @@ addon_keymaps = []
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
+
     wm = bpy.context.window_manager
 
     if wm.keyconfigs.addon:
@@ -143,7 +149,6 @@ def register():
         km = wm.keyconfigs.addon.keymaps.new(name='3D View Generic', space_type='VIEW_3D')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'O', 'PRESS', shift=True, alt=True)
         kmi.properties.name = "origin.pivotmenu"
-#        kmi.active = True
         addon_keymaps.append((km, kmi))
 
 
@@ -153,8 +158,8 @@ def unregister():
     wm = bpy.context.window_manager
 
     kc = wm.keyconfigs.addon
-    if kc:
-        km = kc.keymaps['3D View Generic']
+    km = kc.keymaps.get('3D View Generic') if kc else None
+    if km:
         for kmi in km.keymap_items:
             if kmi.idname == 'wm.call_menu_pie':
                 if kmi.properties.name == "origin.pivotmenu":

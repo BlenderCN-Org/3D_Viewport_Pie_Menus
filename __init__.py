@@ -67,6 +67,11 @@ sub_modules_names = (
 sub_modules = [__import__(__package__ + "." + submod, {}, {}, submod) for submod in sub_modules_names]
 sub_modules.sort(key=lambda mod: (mod.bl_info['category'], mod.bl_info['name']))
 
+if "bpy" in locals():
+    import importlib
+    for module in sub_modules:
+        importlib.reload(module)
+
 
 def _get_pref_class(mod):
     import inspect
@@ -122,11 +127,51 @@ def unregister_submodule(mod):
                     del prefs[name]
 
 
+def enable_all_modules(self, context):
+    for mod in sub_modules:
+        mod_name = mod.__name__.split('.')[-1]
+        setattr(self, 'use_' + mod_name, False)
+        if not mod.__addon_enabled__:
+            setattr(self, 'use_' + mod_name, True)
+            mod.__addon_enabled__ = True
+
+    return None
+
+
+def disable_all_modules(self, context):
+    for mod in sub_modules:
+        mod_name = mod.__name__.split('.')[-1]
+
+        if mod.__addon_enabled__:
+            setattr(self, 'use_' + mod_name, False)
+            mod.__addon_enabled__ = False
+
+    return None
+
+
 class PieToolsPreferences(AddonPreferences):
     bl_idname = __name__
 
+    enable_all = BoolProperty(
+            name="Enable all",
+            description="Enable all Pie Modules",
+            default=False,
+            update=enable_all_modules
+            )
+    disable_all = BoolProperty(
+            name="Disable all",
+            description="Disable all Pie Modules",
+            default=False,
+            update=disable_all_modules
+            )
+
     def draw(self, context):
         layout = self.layout
+        split = layout.split(percentage=0.5, align=True)
+        sub_box_1 = split.box()
+        sub_box_1.prop(self, "enable_all", toggle=True, emboss=False)
+        sub_box_2 = split.box()
+        sub_box_2.prop(self, "disable_all", toggle=True, emboss=False)
 
         for mod in sub_modules:
             mod_name = mod.__name__.split('.')[-1]
@@ -161,10 +206,12 @@ class PieToolsPreferences(AddonPreferences):
                     split = col.row().split(percentage=0.15)
                     split.label('Location:')
                     split.label(info['location'])
-                if info.get('author') and info.get('author') != 'chromoly':
+                """
+                if info.get('author'):
                     split = col.row().split(percentage=0.15)
                     split.label('Author:')
                     split.label(info['author'])
+                """
                 if info.get('version'):
                     split = col.row().split(percentage=0.15)
                     split.label('Version:')
@@ -196,12 +243,14 @@ class PieToolsPreferences(AddonPreferences):
                         try:
                             prefs.draw(context)
                         except:
+                            import traceback
                             traceback.print_exc()
                             box.label(text='Error (see console)', icon='ERROR')
                         del prefs.layout
 
         row = layout.row()
-        row.label("End of Pie Menu Activations")
+        row.label(text="End of Advanced Object Panels Activations",
+                  icon="FILE_PARENT")
 
 
 for mod in sub_modules:
@@ -219,10 +268,10 @@ for mod in sub_modules:
         return update
 
     prop = BoolProperty(
-        name=info['name'],
-        description=info.get('description', ''),
-        update=gen_update(mod),
-    )
+            name=info['name'],
+            description=info.get('description', ''),
+            update=gen_update(mod),
+            )
     setattr(PieToolsPreferences, 'use_' + mod_name, prop)
     prop = BoolProperty()
     setattr(PieToolsPreferences, 'show_expanded_' + mod_name, prop)
@@ -252,6 +301,7 @@ def unregister():
 
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
+
 
 if __name__ == "__main__":
     register()

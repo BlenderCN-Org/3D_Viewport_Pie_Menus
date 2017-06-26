@@ -71,7 +71,6 @@ class pie_link(Menu):
         layout = self.layout
         pie = layout.menu_pie()
         box = pie.split().column()
-        row = box.row(align=True)
         box.operator("wm.link", text="Link", icon='LINK_BLEND')
         box.operator("wm.append", text="Append", icon='APPEND_BLEND')
         box.menu("external.data", text="External Data", icon='EXTERNAL_DATA')
@@ -85,7 +84,6 @@ class pie_recover(Menu):
         layout = self.layout
         pie = layout.menu_pie()
         box = pie.split().column()
-        row = box.row(align=True)
         box.operator("wm.recover_auto_save", text="Recover Auto Save...", icon='RECOVER_AUTO')
         box.operator("wm.recover_last_session", text="Recover Last Session", icon='RECOVER_LAST')
         box.operator("wm.revert_mainfile", text="Revert", icon='FILE_REFRESH')
@@ -99,7 +97,6 @@ class pie_fileio(Menu):
         layout = self.layout
         pie = layout.menu_pie()
         box = pie.split().column()
-        row = box.row(align=True)
         box.menu("INFO_MT_file_import", icon='IMPORT')
         box.separator()
         box.menu("INFO_MT_file_export", icon='EXPORT')
@@ -196,22 +193,22 @@ def register():
         km = wm.keyconfigs.addon.keymaps.new(name='Window')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'PRESS', ctrl=True)
         kmi.properties.name = "pie.saveopen"
-#        kmi.active = True
         addon_keymaps.append((km, kmi))
 
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
-    wm = bpy.context.window_manager
 
+    wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
-    if kc:
-        km = kc.keymaps['Window']
+    km = kc.keymaps.get('Window') if kc else None
+    if km:
         for kmi in km.keymap_items:
             if kmi.idname == 'wm.call_menu_pie':
                 if kmi.properties.name == "pie.saveopen":
                     km.keymap_items.remove(kmi)
+
 
 if __name__ == "__main__":
     register()

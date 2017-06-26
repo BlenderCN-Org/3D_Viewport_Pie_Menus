@@ -21,8 +21,8 @@
 bl_info = {
     "name": "Hotkey: 'Z'",
     "description": "Viewport Shading Menus",
-    #    "author": "pitiwazou, meta-androcto",
-    #    "version": (0, 1, 0),
+    "author": "pitiwazou, meta-androcto",
+    "version": (0, 1, 1),
     "blender": (2, 77, 0),
     "location": "3D View",
     "warning": "",
@@ -33,9 +33,8 @@ bl_info = {
 import bpy
 from bpy.types import Menu
 
+
 # Pie Shading - Z
-
-
 class PieShadingView(Menu):
     bl_idname = "pie.shadingview"
     bl_label = "Pie Shading"
@@ -72,18 +71,17 @@ def register():
         km = wm.keyconfigs.addon.keymaps.new(name='3D View Generic', space_type='VIEW_3D')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'Z', 'PRESS')
         kmi.properties.name = "pie.shadingview"
-#        kmi.active = True
         addon_keymaps.append((km, kmi))
 
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
-    wm = bpy.context.window_manager
 
+    wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
-    if kc:
-        km = kc.keymaps['3D View Generic']
+    km = kc.keymaps.get('3D View Generic') if kc else None
+    if km:
         for kmi in km.keymap_items:
             if kmi.idname == 'wm.call_menu_pie':
                 if kmi.properties.name == "pie.shadingview":
