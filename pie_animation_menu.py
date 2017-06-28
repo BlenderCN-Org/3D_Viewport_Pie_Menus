@@ -104,7 +104,6 @@ def register():
         km = wm.keyconfigs.addon.keymaps.new(name='Object Non-modal')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'A', 'PRESS', alt=True)
         kmi.properties.name = "pie.animation"
-        # kmi.active = True
         addon_keymaps.append((km, kmi))
 
 

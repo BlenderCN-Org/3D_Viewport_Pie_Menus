@@ -165,7 +165,6 @@ def register():
         km = wm.keyconfigs.addon.keymaps.new(name='3D View Generic', space_type='VIEW_3D')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'Q', 'PRESS')
         kmi.properties.name = "pie.viewnumpad"
-        # kmi.active = True
         addon_keymaps.append((km, kmi))
 
 

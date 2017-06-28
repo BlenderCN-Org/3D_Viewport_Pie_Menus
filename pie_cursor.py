@@ -36,18 +36,17 @@ from bpy.types import (
         Operator,
         )
 
+
 # SnapCursSelToCenter1 thanks to Isaac Weaver (wisaac) D1963
-
-
 class Snap_CursSelToCenter1(Operator):
-    """Snap 3D cursor and selected objects to the center \n"""\
-        """Works only in Object Mode"""
     bl_idname = "view3d.snap_cursor_selected_to_center1"
     bl_label = "Snap Cursor & Selection to Center"
+    bl_description = ("Snap 3D cursor and selected objects to the center \n"
+                     "Works only in Object Mode")
 
     @classmethod
     def poll(cls, context):
-        return (context.mode == "OBJECT")
+        return (context.area.type == "VIEW_3D" and context.mode == "OBJECT")
 
     def execute(self, context):
         context.space_data.cursor_location = (0, 0, 0)
@@ -69,9 +68,10 @@ class Snap_CursorMenu(Menu):
                      icon='CLIPUV_HLT').use_offset = False
         # 6 - RIGHT
         pie.operator("view3d.snap_selected_to_cursor",
-                     text="Selection to Cursor (Offset)", icon='CURSOR').use_offset = True
+                    text="Selection to Cursor (Offset)", icon='CURSOR').use_offset = True
         # 2 - BOTTOM
-        pie.operator("view3d.snap_cursor_selected_to_center1", text="Selected & Cursor to Center", icon='ALIGN')
+        pie.operator("view3d.snap_cursor_selected_to_center1",
+                    text="Selected & Cursor to Center", icon='ALIGN')
         # 8 - TOP
         pie.operator("view3d.snap_cursor_to_center", text="Cursor to Center", icon='CLIPUV_DEHLT')
         # 7 - TOP - LEFT

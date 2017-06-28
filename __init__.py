@@ -18,19 +18,6 @@
 
 # <pep8 compliant>
 
-bl_info = {
-    "name": "3D Viewport Pie Menus",
-    "author": "meta-androcto, pitiwazou, chromoly, italic",
-    "version": (1, 1, 4),
-    "blender": (2, 7, 7),
-    "description": "Individual Pie Menu Activation List",
-    "location": "Addons Preferences",
-    "warning": "",
-    "wiki_url": "https://wiki.blender.org/index.php/Extensions:2.6/Py/"
-    "Scripts/3D_interaction/viewport_pies",
-    "category": "Pie Menu"
-    }
-
 
 import bpy
 from bpy.props import (
@@ -41,6 +28,20 @@ from bpy.types import (
         PropertyGroup,
         AddonPreferences,
         )
+
+
+bl_info = {
+    "name": "3D Viewport Pie Menus",
+    "author": "meta-androcto, pitiwazou, chromoly, italic",
+    "version": (1, 1, 4),
+    "blender": (2, 7, 7),
+    "description": "Individual Pie Menu Activation List",
+    "location": "Addons Preferences",
+    "warning": "",
+    "wiki_url": "https://wiki.blender.org/index.php/Extensions:2.6/Py/"
+                "Scripts/3D_interaction/viewport_pies",
+    "category": "Pie Menu"
+    }
 
 sub_modules_names = (
     "pie_modes_menu",
@@ -64,13 +65,9 @@ sub_modules_names = (
     )
 
 
-sub_modules = [__import__(__package__ + "." + submod, {}, {}, submod) for submod in sub_modules_names]
+sub_modules = [__import__(__package__ + "." + submod, {}, {}, submod) for
+              submod in sub_modules_names]
 sub_modules.sort(key=lambda mod: (mod.bl_info['category'], mod.bl_info['name']))
-
-if "bpy" in locals():
-    import importlib
-    for module in sub_modules:
-        importlib.reload(module)
 
 
 def _get_pref_class(mod):
@@ -168,10 +165,18 @@ class PieToolsPreferences(AddonPreferences):
     def draw(self, context):
         layout = self.layout
         split = layout.split(percentage=0.5, align=True)
-        sub_box_1 = split.box()
-        sub_box_1.prop(self, "enable_all", toggle=True, emboss=False)
-        sub_box_2 = split.box()
-        sub_box_2.prop(self, "disable_all", toggle=True, emboss=False)
+        row = split.row()
+        sub_box = row.box()
+        sub_box.prop(self, "enable_all", emboss=False,
+                    icon="VISIBLE_IPO_ON", icon_only=True)
+        row.label("Enable All")
+
+        row = split.row()
+        row.alignment = "RIGHT"
+        row.label("Disable All")
+        sub_box = row.box()
+        sub_box.prop(self, "disable_all", emboss=False,
+                    icon="VISIBLE_IPO_OFF", icon_only=True)
 
         for mod in sub_modules:
             mod_name = mod.__name__.split('.')[-1]

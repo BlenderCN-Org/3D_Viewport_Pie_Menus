@@ -252,7 +252,8 @@ class PieInteractiveModeGreasePencil(Operator):
         try:
             bpy.ops.gpencil.editmode_toggle()
         except:
-            self.report({'WARNING'}, "It is not possible to enter into the interactive mode")
+            self.report({'WARNING'},
+                        "It is not possible to enter into the interactive mode")
         return {'FINISHED'}
 
 

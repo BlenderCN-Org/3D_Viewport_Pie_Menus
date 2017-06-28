@@ -125,7 +125,7 @@ class ExternalData(Menu):
 class FileIncrementalSave(Operator):
     bl_idname = "file.save_incremental"
     bl_label = "Save Incremental"
-    bl_description = "Save First!then Incremental, .blend will get _001 extension"
+    bl_description = "Save First! then Incremental, .blend will get _001 extension"
     bl_options = {"REGISTER"}
 
     @classmethod
@@ -160,7 +160,8 @@ class FileIncrementalSave(Operator):
         try:
             bpy.ops.wm.save_as_mainfile(filepath=output)
         except:
-            self.report({'WARNING'}, "File could not be saved. Check the System Console for errors")
+            self.report({'WARNING'},
+                        "File could not be saved. Check the System Console for errors")
             return {'CANCELLED'}
 
         self.report(

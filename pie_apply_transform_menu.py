@@ -39,7 +39,6 @@ from bpy.props import EnumProperty
 
 
 # Pie Apply Transforms - Ctrl + A
-
 class PieApplyTransforms(Menu):
     bl_idname = "pie.applytranforms"
     bl_label = "Pie Apply Transforms"
@@ -54,13 +53,10 @@ class PieApplyTransforms(Menu):
         # 2 - BOTTOM
         pie.operator("object.duplicates_make_real", text="Make Duplicates Real")
         # 8 - TOP
-        # pie.operator("apply.transformrotation", text="Rotation", icon='MAN_ROT')
         pie.operator("apply.transformlocrotscale", text="Rotation", icon='MAN_ROT').option = 'ROT'
         # 7 - TOP - LEFT
-        # pie.operator("apply.transformlocation", text="Location", icon='MAN_TRANS')
         pie.operator("apply.transformlocrotscale", text="Location", icon='MAN_ROT').option = 'LOC'
         # 9 - TOP - RIGHT
-        # pie.operator("apply.transformscale", text="Scale", icon='MAN_SCALE')
         pie.operator("apply.transformlocrotscale", text="Scale", icon='MAN_ROT').option = 'SCALE'
         # 1 - BOTTOM - LEFT
         pie.operator("object.visual_transform_apply", text="Visual Transforms")
@@ -69,7 +65,6 @@ class PieApplyTransforms(Menu):
 
 
 # Apply Transforms
-
 class ApplyTransLocRotPie(Operator):
     bl_idname = "apply.transformlocrotscale"
     bl_label = "Apply Transforms"
@@ -96,7 +91,6 @@ class ApplyTransLocRotPie(Operator):
 
 
 # Apply Transforms
-
 class ApplyTransformAll(Operator):
     bl_idname = "apply.transformall"
     bl_label = "Apply All Transforms"
@@ -109,7 +103,6 @@ class ApplyTransformAll(Operator):
 
 
 # Clear Menu
-
 class ClearMenu(Menu):
     bl_idname = "clear.menu"
     bl_label = "Clear Menu"
@@ -123,7 +116,6 @@ class ClearMenu(Menu):
 
 
 # Clear all
-
 class ClearAll(Operator):
     bl_idname = "clear.all"
     bl_label = "Clear All"
